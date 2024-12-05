@@ -31,7 +31,7 @@ jobs:
         subfinder -d $targetname -o subfinder.txt
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3  # Updated version
       with:
         name: scan-results
         path: |
