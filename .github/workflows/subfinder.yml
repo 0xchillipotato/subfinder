@@ -1,0 +1,38 @@
+name: WaybackURLs and Nuclei Scanner
+
+on:
+  push:
+    branches:
+      - main  # Change this to your default branch if it's different
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    env:
+      targetname: 'arrow.com'  # Set your default target name here
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.16'
+
+    - name: Install Required Tools
+      run: |
+        go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+
+    - name: Subfinder
+      run: |
+        echo "[*] Running subfinder"
+        subfinder -d $targetname -o subfinder.txt
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: scan-results
+        path: |
+          ${{ github.workspace }}/subfinder.txt
